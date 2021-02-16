@@ -14,10 +14,10 @@ i.e -
 ```
 
 ### ToDo List 
-    - [ x ] Fetch data from api 
-    - [ x ] Filter the data 
-    - [ x ] Sort the data dictonary
-    - [ x ] Print data capatured for 1 minute
+    - [x]  Fetch json from api 
+    - [x]  Filter the json 
+    - [x]  Sort the json data
+    - [x] Print data capatured for 1 minute
     - [ ] Sliding window to show past 5 minutes collected data
 
 &nbsp;
