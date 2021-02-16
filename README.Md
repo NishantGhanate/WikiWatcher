@@ -4,7 +4,8 @@
 
 ```sh
 
-Wiki watcher is an python program made to consume wikipedia streaming data and generate a report every 1 & 5 minutes 
+Wiki watcher is an python program made to consume wikipedia streaming data and 
+generate a report every 1 & 5 minutes 
 i.e - 
     1) No.of unique title data changes made to a domain
     2) Accumalte the unique users (excluding bot) and their user text and edit count 
@@ -13,11 +14,11 @@ i.e -
 ```
 
 ### ToDo List 
-    - [x] Fetch data from api 
-    - [x] Filter the data 
-    - [x] Sort the data dictonary
-    - [x] Print data capatured for 1 minute
-    - [] Sliding window to show past 5 minutes collected data
+    - [ x ] Fetch data from api 
+    - [ x ] Filter the data 
+    - [ x ] Sort the data dictonary
+    - [ x ] Print data capatured for 1 minute
+    - [ ] Sliding window to show past 5 minutes collected data
 
 &nbsp;
 
@@ -27,7 +28,7 @@ i.e -
 
 Create an empty folder and use the command below:
 ```sh
-git clone https://github.com/NishantGhanate/{url}.git.
+git clone https://github.com/NishantGhanate/WikiWatcher.git
 ```
 
 In Cli : 1. Create virtual enviroment, 2. Activate it,  3. Install requirements 
@@ -68,10 +69,10 @@ data = {
     }
 }
 
+```
 where domain_ will be the domain name , 
 users will contain user text : user edit count value
 and page_edit_count is no. of unique titles updated in that domain
-```
 
 &nbsp;
 
