@@ -12,14 +12,6 @@ i.e -
     3) Sort changes made to a domian & user edit count in a descending order 
 
 ```
-
-### ToDo List 
-    - [x]  Fetch json from api 
-    - [x]  Filter the json 
-    - [x]  Sort the json data
-    - [x] Print data capatured for 1 minute
-    - [ ] Sliding window to show past 5 minutes collected data
-
 &nbsp;
 
 ### Getting started
@@ -38,7 +30,6 @@ In Cli : 1. Create virtual enviroment, 2. Activate it,  3. Install requirements
  > venv\Scripts\activate
 
  > pip install -r requirements.txt
-
 ```
 
 ### Run the code :
@@ -71,8 +62,8 @@ data = {
 
 ```
 where domain_ will be the domain name , 
-users will contain user text : user edit count value
-and page_edit_count is no. of unique titles updated in that domain
+users will contain { user text : user edit count value }
+and {page_edit_count} is no. of unique titles updated in that domain
 
 &nbsp;
 
