@@ -295,7 +295,7 @@ async def timer():
         CURRENT_TIME = datetime.now()
         done = time.time()
         elapsed = done - start
-        if elapsed >= 5:
+        if elapsed >= 60:
             print("\nTime is {} ".format(CURRENT_TIME))
             start = done
             if EVENT_DATA:
