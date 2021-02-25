@@ -46,14 +46,19 @@ def filter_report(json_data):
                         'users' :   {
                             user_text :  user_edit_count,
                         },
-                        'page_titles' : { data['page_title'] },
+                        'page_titles' : { 
+                            data['page_title'] : 1
+                        },
                         'page_count' : 1
                     }
                     maps[data['meta']['domain']] = temp
                 else:
+                    title = data['page_title'] 
+                    if title not in maps[domain]['page_titles']:
+                        maps[domain]['page_titles'][title] = 1 
+                    else:
+                        maps[domain]['page_titles'][title] += 1
                     
-                    maps[domain]['page_titles'].add(data['page_title']) 
-
                     performer = data['performer']
                     user_text = performer['user_text']
                     if 'user_edit_count' in performer:
@@ -100,7 +105,10 @@ def crunch_report():
                     # or add new users in that domain
                     page_titles = window[domain]['page_titles']
                     for title in page_titles:
-                        MIN_5_REPORT[domain]['page_titles'].add(title)
+                        if title in MIN_5_REPORT[domain]['page_titles']:
+                            MIN_5_REPORT[domain]['page_titles'][title] += page_titles[title]
+                        else:
+                            MIN_5_REPORT[domain]['page_titles'][title] = page_titles[title]
                         # print(type(MIN_5_REPORT[domain]['page_titles']))
                     MIN_5_REPORT[domain]['page_count'] = len(MIN_5_REPORT[domain]['page_titles'])
 
@@ -122,10 +130,12 @@ def re_calucate(json_remove,json_add):
                 domain_titles = MIN_5_REPORT[domain]['page_titles'].copy()
                 for title in json_remove[domain]['page_titles']:
                     if title in MIN_5_REPORT[domain]['page_titles']:
-                        domain_titles.remove(title)
+                        domain_titles[title] -=  1
+                        if domain_titles[title] < 1:
+                            domain_titles[title].pop()
 
                 MIN_5_REPORT[domain]['page_titles'] = domain_titles
-                MIN_5_REPORT[domain]['page_count'] = len(MIN_5_REPORT[domain]['page_titles'])
+                MIN_5_REPORT[domain]['page_count'] = len(domain_titles)
 
                 users_list = json_remove[domain]['users']
                 for user in users_list:
@@ -139,7 +149,9 @@ def re_calucate(json_remove,json_add):
             if domain in MIN_5_REPORT:
                 for title in json_add[domain]['page_titles']:
                     if title not in MIN_5_REPORT[domain]['page_titles']:
-                        MIN_5_REPORT[domain]['page_titles'].add(title)
+                        MIN_5_REPORT[domain]['page_titles'][title] = 1
+                    else:
+                        MIN_5_REPORT[domain]['page_titles'][title] += 1
                 MIN_5_REPORT[domain]['page_count'] = len(MIN_5_REPORT[domain]['page_titles'])
 
                 users_list = json_add[domain]['users']
@@ -157,7 +169,7 @@ def re_calucate(json_remove,json_add):
 async def save_report(json_data):
 
     for domain in json_data:
-        json_data[domain]['page_titles'] = list( json_data[domain]['page_titles'])
+        json_data[domain]['page_titles'] = [title for title in json_data[domain]['page_titles']]
 
     try:
         time_stamp =  datetime.now().strftime("%A- %d- %B %Y %I-%M-%S")
@@ -222,7 +234,7 @@ async def generate_report(json_data):
    
     
     #TODO: save report async based on event url & timestamp
-    if COUNTER > 5:
+    if COUNTER > 2:
         five_minute = timedelta(minutes=5)
         PREV_TIME = CURRENT_TIME - five_minute
         json_remove = TIME_WINDOW.popleft()
@@ -237,7 +249,9 @@ async def generate_report(json_data):
             prev_time=  PREV_TIME,
             current_time= CURRENT_TIME
         )
-        await save_report(json_data= copy.deepcopy(result)) 
+        await save_report(
+            json_data= copy.deepcopy(result)
+        ) 
         
     else: 
         COUNTER += 1
@@ -250,9 +264,11 @@ async def generate_report(json_data):
             prev_time=  PREV_TIME,
             current_time= CURRENT_TIME
         )
-        await save_report(json_data= copy.deepcopy(sorted_report)) 
+        await save_report(
+            json_data= copy.deepcopy(sorted_report)
+        ) 
         
-        if COUNTER == 5:
+        if COUNTER == 2:
             crunch_report()
             
 async def read_stream(session):
@@ -295,11 +311,13 @@ async def timer():
         CURRENT_TIME = datetime.now()
         done = time.time()
         elapsed = done - start
-        if elapsed >= 60:
+        if elapsed >= 2:
             print("\nTime is {} ".format(CURRENT_TIME))
             start = done
             if EVENT_DATA:
-                await generate_report(json_data= EVENT_DATA)
+                await generate_report(
+                    json_data= copy.deepcopy(EVENT_DATA)
+                )
                 EVENT_DATA = []
             else:
                 print("\n Did not recive any data past 1 minute , trying again ....")

@@ -48,7 +48,10 @@ data = {
             'domain_1_user_2' : 2,
             'domain_1_user_3' : 3
         },
-        'page_titles': {'title1','title2','all_unique_title'},
+        'page_titles': {
+            'title1',
+            'all_unique_title'
+        },
         'page_count': 3
     },
     'domain_2' : {
@@ -57,7 +60,10 @@ data = {
             'domain_2_user_2' : 2,
             'domain_2_user_3' : 3
         },
-        'page_titles': {'title1','all_unique_title'},
+        'page_titles': {
+            'title1',
+            'all_unique_title'
+        },
         'page_count': 2
     }
 }
